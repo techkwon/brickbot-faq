@@ -1,0 +1,17 @@
+.DS_Store
+.env
+.env.*
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.jsonl
+*.log
+raw/
+logs/
+private/
+credentials/
+node_modules/
+_site/
+__pycache__/
+*.pyc

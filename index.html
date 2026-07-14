@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="2026년 2권역 중등 강사진 공개 FAQ">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#FFD84D">
+  <title>중등 강사진 FAQ</title>
+  <link rel="stylesheet" href="./assets/styles.css">
+  <script src="./assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 바로가기</a>
+
+  <header class="topbar">
+    <a class="brand" href="#/" aria-label="FAQ 홈">
+      <span class="brand-mark" aria-hidden="true">B</span>
+      <span>BRICKBOT FAQ</span>
+    </a>
+    <div class="update-chip" id="schedule">매일 12:00 KST 업데이트</div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">2026 · 2권역 · 중등 강사진</p>
+        <h1 id="hero-title">찾는 답을<br><span>빠르게.</span></h1>
+        <p class="hero-description" id="subtitle">최근 24시간 대화에서 공개 가능한 내용만 정리합니다.</p>
+      </div>
+      <div class="hero-note" role="note">
+        <strong>공개 범위 안내</strong>
+        <p id="notice">내부 링크와 상세 자료는 단톡방 종합안내에서 확인해 주세요.</p>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="FAQ 검색 및 필터">
+      <label class="search-box" for="search">
+        <span aria-hidden="true">⌕</span>
+        <span class="sr-only">FAQ 검색</span>
+        <input id="search" type="search" autocomplete="off" placeholder="질문이나 키워드를 검색하세요">
+        <kbd>/</kbd>
+      </label>
+      <div class="filters" id="filters" aria-label="카테고리 필터"></div>
+      <p class="result-count" id="result-count" aria-live="polite"></p>
+    </section>
+
+    <section class="section" id="daily-section" aria-labelledby="daily-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">DAILY ARCHIVE</p>
+          <h2 id="daily-title">24시간 FAQ</h2>
+        </div>
+        <a class="text-link" href="#/">최신 보기</a>
+      </div>
+      <div id="daily-summary" class="daily-summary" hidden></div>
+      <div id="faq-list" class="faq-list" aria-live="polite"></div>
+      <div id="empty-state" class="empty-card" hidden>
+        <span class="empty-icon" aria-hidden="true">□</span>
+        <h3>아직 발행된 FAQ가 없습니다.</h3>
+        <p>첫 24시간 FAQ는 다음 정오에 업데이트됩니다.</p>
+      </div>
+    </section>
+
+    <section class="section guides-section" aria-labelledby="guides-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">QUICK GUIDE</p>
+          <h2 id="guides-title">공개 안내</h2>
+        </div>
+      </div>
+      <div id="guide-list" class="guide-grid"></div>
+    </section>
+
+    <section class="section archive-section" aria-labelledby="archive-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">HISTORY</p>
+          <h2 id="archive-title">날짜별 기록</h2>
+        </div>
+      </div>
+      <nav id="archive-list" class="archive-list" aria-label="날짜별 FAQ"></nav>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>BRICKBOT FAQ</strong></p>
+    <p>카카오톡 원문·개인정보·내부 링크는 이 사이트에 저장하지 않습니다.</p>
+    <a href="./privacy.html">공개 데이터 정책</a>
+  </footer>
+
+  <noscript>
+    <div class="noscript">FAQ를 표시하려면 JavaScript를 활성화해 주세요.</div>
+  </noscript>
+</body>
+</html>
