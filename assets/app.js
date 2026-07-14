@@ -10,12 +10,63 @@ const state = {
 };
 
 const $ = (selector) => document.querySelector(selector);
+const ACCESS_HASH = "158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab";
+const ACCESS_SESSION_KEY = "brickbot-faq-access";
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
   if (text !== undefined) node.textContent = text;
   return node;
+}
+
+async function sha256(value) {
+  const data = new TextEncoder().encode(value);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function unlockSite() {
+  document.body.classList.remove("access-locked");
+  $("#access-gate").hidden = true;
+  $("#site-shell").hidden = false;
+}
+
+async function checkAccess(event) {
+  event?.preventDefault();
+  const input = $("#access-code");
+  const error = $("#access-error");
+  const hash = await sha256(input.value.trim());
+  if (hash !== ACCESS_HASH) {
+    error.textContent = "접속 코드가 올바르지 않습니다.";
+    input.select();
+    return;
+  }
+  sessionStorage.setItem(ACCESS_SESSION_KEY, "granted");
+  error.textContent = "";
+  unlockSite();
+  init();
+  $("#search").focus();
+}
+
+function appendLinkedText(container, text) {
+  const urlPattern = /(https?:\/\/[^\s]+)/g;
+  let cursor = 0;
+  for (const match of text.matchAll(urlPattern)) {
+    const start = match.index;
+    if (start > cursor) container.append(document.createTextNode(text.slice(cursor, start)));
+    const rawUrl = match[0];
+    const trailing = rawUrl.match(/[),.;!?]+$/)?.[0] || "";
+    const url = trailing ? rawUrl.slice(0, -trailing.length) : rawUrl;
+    const link = el("a", "faq-link", url);
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    container.append(link);
+    if (trailing) container.append(document.createTextNode(trailing));
+    cursor = start + rawUrl.length;
+  }
+  if (cursor < text.length) container.append(document.createTextNode(text.slice(cursor)));
 }
 
 async function loadJson(path) {
@@ -112,7 +163,9 @@ function renderFaqs() {
     card.append(summary);
 
     const answer = el("div", "faq-answer");
-    answer.append(el("p", "", faq.answer));
+    const answerText = el("p");
+    appendLinkedText(answerText, faq.answer);
+    answer.append(answerText);
     const meta = el("div", "faq-meta");
     meta.append(el("span", "meta-badge", faq.category));
     meta.append(el("span", `meta-badge${faq.status === "검수 필요" ? " review" : ""}`, faq.status));
@@ -197,4 +250,10 @@ document.addEventListener("keydown", (event) => {
 });
 
 window.addEventListener("hashchange", handleRoute);
-init();
+$("#access-form").addEventListener("submit", checkAccess);
+if (sessionStorage.getItem(ACCESS_SESSION_KEY) === "granted") {
+  unlockSite();
+  init();
+} else {
+  $("#access-code").focus();
+}

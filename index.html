@@ -10,8 +10,28 @@
   <link rel="stylesheet" href="./assets/styles.css">
   <script src="./assets/app.js" defer></script>
 </head>
-<body>
+<body class="access-locked">
   <a class="skip-link" href="#main">본문으로 바로가기</a>
+
+  <section class="access-gate" id="access-gate" aria-labelledby="access-title">
+    <div class="access-card">
+      <span class="access-mark" aria-hidden="true">B</span>
+      <p class="eyebrow">2026 · 2권역 · 중등 강사진</p>
+      <h1 id="access-title">BRICKBOT<br><span>FAQ</span></h1>
+      <p>강사진 전용 FAQ입니다. 안내받은 접속 코드를 입력해 주세요.</p>
+      <form id="access-form" class="access-form">
+        <label for="access-code">접속 코드</label>
+        <div class="access-input-row">
+          <input id="access-code" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="접속 코드 입력" required>
+          <button type="submit">입장하기</button>
+        </div>
+        <p id="access-error" class="access-error" role="alert" aria-live="polite"></p>
+      </form>
+      <small>접속 코드는 강사진에게만 공유해 주세요.</small>
+    </div>
+  </section>
+
+  <div id="site-shell" hidden>
 
   <header class="topbar">
     <a class="brand" href="#/" aria-label="FAQ 홈">
@@ -85,12 +105,13 @@
 
   <footer>
     <p><strong>BRICKBOT FAQ</strong></p>
-    <p>카카오톡 원문·개인정보·내부 링크는 이 사이트에 저장하지 않습니다.</p>
+    <p>카카오톡 원문·개인정보·비밀번호·인증정보는 이 사이트에 저장하지 않습니다.</p>
     <a href="./privacy.html">공개 데이터 정책</a>
   </footer>
 
   <noscript>
     <div class="noscript">FAQ를 표시하려면 JavaScript를 활성화해 주세요.</div>
   </noscript>
+  </div>
 </body>
 </html>

@@ -12,16 +12,19 @@ DAILY = ROOT / "data" / "daily"
 ALLOWED_URL_PREFIXES = (
     "http://localhost:4173",
     "https://techkwon.github.io/brickbot-faq",
+    "https://docs.google.com/spreadsheets/d/1vdCn7XlzJpcHMTnOJdjOl3x7PR_AkNZhH-VQxN7CCm0/",
+    "https://ai-goe.spoonk7.workers.dev/view/m",
+    "https://ai-goe.spoonk7.workers.dev/hub/materials",
+    "https://open.kakao.com/o/sfXx4RZg",
+    "https://drive.google.com/drive/folders/1TDFUgqfaqShVC6fs3c4qTfaMUMV-z2MF",
+    "https://drive.google.com/drive/folders/1oAoQKTHVwMGr5vwGa323y1vlv5KhS5ab",
+    "https://drive.google.com/drive/folders/1_Sj1P2iL5r0jHXJaNBWSeecEVTplI49B",
+    "https://discord.gg/uHFejFphC",
+    "https://padlet.com/Lecoeur_dr/2026-2-zpl0jnrtnfsqtz4z",
+    "https://kocoafab.cc/edu/kocomate",
 )
 TEXT_SUFFIXES = {".html", ".css", ".js", ".json", ".md", ".txt", ".yml", ".yaml"}
-FORBIDDEN_DOMAINS = {
-    "docs.google.com",
-    "drive.google.com",
-    "open.kakao.com",
-    "discord.gg",
-    "padlet.com",
-    "ai-goe.spoonk7.workers.dev",
-}
+FORBIDDEN_DOMAINS: set[str] = set()
 FORBIDDEN_FRAGMENTS = {
     "/Users/techkwon",
     "KAKAOCLI_USER_ID",

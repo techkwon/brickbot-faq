@@ -1,0 +1,70 @@
+{
+  "date": "2026-07-14",
+  "period_start": "2026-07-13 12:00",
+  "period_end": "2026-07-14 12:00",
+  "generated_at": "2026-07-14T12:00:00+09:00",
+  "summary": "강사진이 자주 찾는 종합안내와 코코메이트 다운로드 정보를 정리했습니다. 비밀번호와 개인정보는 포함하지 않습니다.",
+  "stats": {"messages_reviewed": 10, "questions_detected": 10, "changes": 1, "excluded": 2},
+  "faqs": [
+    {
+      "id": "2026-07-14-remote-zoom-sheet",
+      "question": "원격강의 줌주소는 어디에 입력하나요?",
+      "answer": "원격강의 줌주소 입력 시트에서 작성해 주세요.\nhttps://docs.google.com/spreadsheets/d/1vdCn7XlzJpcHMTnOJdjOl3x7PR_AkNZhH-VQxN7CCm0/edit?gid=0#gid=0",
+      "category": "원격", "status": "확인됨", "source_count": 1, "tags": ["줌", "원격", "입력"]
+    },
+    {
+      "id": "2026-07-14-instructor-allocation",
+      "question": "내 강의 배치와 팀은 어디에서 확인하나요?",
+      "answer": "강사배치표에서 이름으로 검색해 확인할 수 있습니다. 본인 배치 확인 용도로만 사용하며 외부 공유는 금지입니다. 비밀번호는 FAQ에서 제공하지 않습니다.\nhttps://ai-goe.spoonk7.workers.dev/view/m",
+      "category": "강사배치", "status": "확인됨", "source_count": 1, "tags": ["배치", "팀", "강사"]
+    },
+    {
+      "id": "2026-07-14-allocation-contact",
+      "question": "강사배치 변경이나 문의는 어디로 하나요?",
+      "answer": "배치 관련 질문과 변경 요청은 담당 오픈프로필로 문의해 주세요.\nhttps://open.kakao.com/o/sfXx4RZg",
+      "category": "강사배치", "status": "확인됨", "source_count": 1, "tags": ["배치", "변경", "문의"]
+    },
+    {
+      "id": "2026-07-14-remote-materials",
+      "question": "원격 공통과정 교안은 어디에 있나요?",
+      "answer": "원격 공통과정 교안은 아래 Google Drive에서 확인해 주세요.\nhttps://drive.google.com/drive/folders/1TDFUgqfaqShVC6fs3c4qTfaMUMV-z2MF?usp=sharing",
+      "category": "자료", "status": "확인됨", "source_count": 1, "tags": ["원격", "공통과정", "교안"]
+    },
+    {
+      "id": "2026-07-14-inperson-materials",
+      "question": "집합 공통과정 교안은 어디에 있나요?",
+      "answer": "집합 공통과정 교안은 아래 Google Drive에서 확인해 주세요.\nhttps://drive.google.com/drive/folders/1oAoQKTHVwMGr5vwGa323y1vlv5KhS5ab?usp=sharing",
+      "category": "자료", "status": "확인됨", "source_count": 1, "tags": ["집합", "공통과정", "교안"]
+    },
+    {
+      "id": "2026-07-14-subject-materials",
+      "question": "교과별 강사 교안은 어디에 있나요?",
+      "answer": "교과별 강사 교안은 아래 Google Drive에서 확인해 주세요.\nhttps://drive.google.com/drive/folders/1_Sj1P2iL5r0jHXJaNBWSeecEVTplI49B?usp=sharing",
+      "category": "교과", "status": "확인됨", "source_count": 1, "tags": ["교과", "강사", "교안"]
+    },
+    {
+      "id": "2026-07-14-materials-hub",
+      "question": "연수 자료마당은 어디에서 볼 수 있나요?",
+      "answer": "연수 자료마당은 아래 링크에서 확인할 수 있습니다.\nhttps://ai-goe.spoonk7.workers.dev/hub/materials",
+      "category": "자료", "status": "확인됨", "source_count": 1, "tags": ["연수", "자료마당"]
+    },
+    {
+      "id": "2026-07-14-discord",
+      "question": "강사진 디스코드방 주소가 궁금합니다.",
+      "answer": "강사진 디스코드방은 아래 초대 링크로 접속해 주세요.\nhttps://discord.gg/uHFejFphC",
+      "category": "공통", "status": "확인됨", "source_count": 1, "tags": ["디스코드", "소통"]
+    },
+    {
+      "id": "2026-07-14-remote-padlet",
+      "question": "연수생 원격 안내 패들렛은 어디인가요?",
+      "answer": "연수생 원격 안내 패들렛은 아래 링크입니다.\nhttps://padlet.com/Lecoeur_dr/2026-2-zpl0jnrtnfsqtz4z",
+      "category": "원격", "status": "확인됨", "source_count": 1, "tags": ["패들렛", "연수생", "안내"]
+    },
+    {
+      "id": "2026-07-14-kocomate-download",
+      "question": "오프라인에서 안내한 코코메이트 위젯은 어디서 받나요?",
+      "answer": "코코메이트는 교사용 올인원 수업 도구이며 안내 페이지에서 Windows용 또는 Mac용 설치 파일을 직접 내려받을 수 있습니다. 별도 지급 일정과 계정·라이선스 정보는 확인된 공지가 없으면 담당자에게 문의해 주세요.\nhttps://kocoafab.cc/edu/kocomate",
+      "category": "자료", "status": "확인됨", "source_count": 1, "tags": ["코코메이트", "위젯", "다운로드", "Windows", "Mac"]
+    }
+  ]
+}
