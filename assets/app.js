@@ -9,6 +9,7 @@ const state = {
   query: "",
   dailyData: null,
   showAll: false,
+  pendingToday: false,
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -80,6 +81,17 @@ async function loadJson(path) {
 function routeDate() {
   const match = location.hash.match(/^#\/daily\/(\d{4}-\d{2}-\d{2})$/);
   return match ? match[1] : null;
+}
+
+function kstToday() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
 }
 
 function renderGuides() {
@@ -157,19 +169,28 @@ function renderFaqs() {
   const archiveMode = isArchiveMode();
   const allFaqs = archiveMode ? state.searchData?.faqs || [] : state.dailyData?.faqs || [];
   const faqs = filterFaqs(allFaqs);
+  const scopeReady = archiveMode ? Boolean(state.searchData) : Boolean(state.dailyData);
   renderViewSwitch();
-  $("#daily-eyebrow").textContent = archiveMode ? "FULL ARCHIVE" : "DAILY ARCHIVE";
-  $("#daily-title").textContent = archiveMode ? "전체 FAQ 검색" : "24시간 FAQ";
-  $("#result-count").textContent = state.dailyData
-    ? archiveMode
-      ? `전체 기록 검색 결과 ${faqs.length}건 · 누적 ${allFaqs.length}건`
-      : `검색 결과 ${faqs.length}건 · 최신 24시간 ${allFaqs.length}건`
-    : "발행 대기 중";
+  $("#daily-eyebrow").textContent = archiveMode ? "FULL ARCHIVE" : state.pendingToday ? "TODAY · PENDING" : "DAILY ARCHIVE";
+  $("#daily-title").textContent = archiveMode ? "전체 FAQ 검색" : state.pendingToday ? "오늘 24시간 FAQ" : "24시간 FAQ";
+  $("#result-count").textContent = archiveMode
+    ? `전체 기록 검색 결과 ${faqs.length}건 · 누적 ${allFaqs.length}건`
+    : state.dailyData
+      ? `검색 결과 ${faqs.length}건 · 오늘 24시간 ${allFaqs.length}건`
+      : `오늘(${state.selectedDate}) FAQ 발행 대기 중`;
 
-  if (!state.dailyData || faqs.length === 0) {
+  if (!scopeReady || faqs.length === 0) {
     empty.hidden = false;
-    empty.querySelector("h3").textContent = state.dailyData ? "조건에 맞는 FAQ가 없습니다." : "아직 발행된 FAQ가 없습니다.";
-    empty.querySelector("p").textContent = state.dailyData ? "검색어나 카테고리를 바꿔보세요." : "첫 24시간 FAQ는 다음 정오에 업데이트됩니다.";
+    empty.querySelector("h3").textContent = state.pendingToday
+      ? `${state.selectedDate} FAQ는 발행 대기 중입니다.`
+      : scopeReady
+        ? "조건에 맞는 FAQ가 없습니다."
+        : "아직 발행된 FAQ가 없습니다.";
+    empty.querySelector("p").textContent = state.pendingToday
+      ? "매일 12:35 KST 업데이트 후 표시됩니다. 전체 보기에서 누적 FAQ를 검색할 수 있습니다."
+      : scopeReady
+        ? "검색어나 카테고리를 바꿔보세요."
+        : "첫 FAQ 발행을 기다리고 있습니다.";
     return;
   }
 
@@ -214,9 +235,11 @@ function renderArchive() {
 }
 
 async function selectDay(date) {
-  const target = date || state.index.daily[0]?.date || null;
+  const target = date || kstToday();
+  const published = state.index.daily.some((day) => day.date === target);
   state.selectedDate = target;
-  state.dailyData = target ? await loadJson(`./data/daily/${target}.json`) : null;
+  state.dailyData = published ? await loadJson(`./data/daily/${target}.json`) : null;
+  state.pendingToday = !date && !published;
   state.showAll = false;
   state.query = "";
   state.selectedCategory = "전체";
