@@ -1,0 +1,18 @@
+{
+  "name": "BRICKBOT FAQ - 중등 강사진 FAQ",
+  "short_name": "BRICKBOT FAQ",
+  "description": "중등 강사진이 자주 찾는 공개 안내와 확인된 링크를 제공하는 비식별 FAQ",
+  "lang": "ko-KR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFFDF5",
+  "theme_color": "#FFD84D",
+  "icons": [
+    {
+      "src": "./assets/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

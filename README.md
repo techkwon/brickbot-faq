@@ -13,6 +13,15 @@
 - 랜딩 화면에서 접속 코드 확인 후 FAQ 화면을 표시합니다. 정적 GitHub Pages의 클라이언트 측 확인이므로 보안 경계로 간주하지 않습니다.
 - 비밀번호·인증정보·개인정보는 접속 코드와 무관하게 게시하지 않습니다.
 
+## SEO
+
+- canonical URL, 검색 설명, robots 지시문을 제공합니다.
+- Open Graph·Twitter Card 공유 이미지는 `assets/og-brickbot-faq.png`를 사용합니다.
+- `WebSite`, `CollectionPage`, 최신 일일 FAQ의 `FAQPage` JSON-LD를 배포 시 생성합니다.
+- `robots.txt`는 원시 JSON 데이터의 직접 색인을 막고 `sitemap.xml` 위치를 알립니다.
+- `sitemap.xml`의 최종 수정일은 `data/index.json`의 최신 발행 시각으로 배포 때 갱신됩니다.
+- `scripts/validate_public_site.py`가 메타태그·구조화 데이터·SEO 자산 크기를 함께 검사합니다.
+
 ## 로컬 확인
 
 ```bash

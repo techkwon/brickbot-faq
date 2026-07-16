@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import json
 import re
+import struct
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,6 +14,9 @@ SEARCH = ROOT / "data" / "search.json"
 
 ALLOWED_URL_PREFIXES = (
     "http://localhost:4173",
+    "http://www.sitemaps.org/schemas/sitemap/0.9",
+    "http://www.w3.org/2000/svg",
+    "https://schema.org",
     "https://techkwon.github.io/brickbot-faq",
     "https://docs.google.com/spreadsheets/d/1vdCn7XlzJpcHMTnOJdjOl3x7PR_AkNZhH-VQxN7CCm0/",
     "https://ai-goe.spoonk7.workers.dev/view/m",
@@ -24,7 +29,7 @@ ALLOWED_URL_PREFIXES = (
     "https://padlet.com/Lecoeur_dr/2026-2-zpl0jnrtnfsqtz4z",
     "https://kocoafab.cc/edu/kocomate",
 )
-TEXT_SUFFIXES = {".html", ".css", ".js", ".json", ".md", ".txt", ".yml", ".yaml"}
+TEXT_SUFFIXES = {".html", ".css", ".js", ".json", ".md", ".txt", ".yml", ".yaml", ".xml", ".svg", ".webmanifest"}
 FORBIDDEN_DOMAINS: set[str] = set()
 FORBIDDEN_FRAGMENTS = {
     "/Users/techkwon",
@@ -149,6 +154,88 @@ def scan_text(path: Path, errors: list[str]) -> None:
         fail(errors, f"{rel}: possible token")
 
 
+def png_size(path: Path) -> tuple[int, int] | None:
+    try:
+        data = path.read_bytes()[:24]
+        if data[:8] != b"\x89PNG\r\n\x1a\n":
+            return None
+        return struct.unpack(">II", data[16:24])
+    except Exception:
+        return None
+
+
+def validate_seo(errors: list[str]) -> None:
+    required = [
+        ROOT / "robots.txt",
+        ROOT / "sitemap.xml",
+        ROOT / "site.webmanifest",
+        ROOT / "assets" / "favicon.svg",
+        ROOT / "assets" / "apple-touch-icon.png",
+        ROOT / "assets" / "og-brickbot-faq.png",
+    ]
+    for path in required:
+        if not path.exists():
+            fail(errors, f"{path.relative_to(ROOT)}: required SEO asset missing")
+
+    index_path = ROOT / "index.html"
+    index = index_path.read_text(encoding="utf-8", errors="replace")
+    required_fragments = [
+        '<link rel="canonical" href="https://techkwon.github.io/brickbot-faq/">',
+        '<meta name="robots" content="index, follow',
+        '<meta property="og:image" content="https://techkwon.github.io/brickbot-faq/assets/og-brickbot-faq.png">',
+        '<meta name="twitter:card" content="summary_large_image">',
+        '<script type="application/ld+json" id="site-structured-data">',
+        '<!-- FAQ_STRUCTURED_DATA -->',
+    ]
+    for fragment in required_fragments:
+        if fragment not in index:
+            fail(errors, f"index.html: missing SEO fragment {fragment!r}")
+
+    script_match = re.search(
+        r'<script type="application/ld\+json" id="site-structured-data">\s*(\{.*?\})\s*</script>',
+        index,
+        re.DOTALL,
+    )
+    if not script_match:
+        fail(errors, "index.html: WebSite structured data missing")
+    else:
+        try:
+            schema = json.loads(script_match.group(1))
+            if schema.get("@context") != "https://schema.org" or not schema.get("@graph"):
+                fail(errors, "index.html: invalid WebSite structured data")
+        except Exception as exc:
+            fail(errors, f"index.html: invalid structured data JSON ({type(exc).__name__})")
+
+    try:
+        robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
+        if "Sitemap: https://techkwon.github.io/brickbot-faq/sitemap.xml" not in robots:
+            fail(errors, "robots.txt: sitemap declaration missing")
+        if "Disallow: /data/" not in robots:
+            fail(errors, "robots.txt: raw data exclusion missing")
+    except FileNotFoundError:
+        pass
+
+    try:
+        ET.parse(ROOT / "sitemap.xml")
+    except Exception as exc:
+        fail(errors, f"sitemap.xml: invalid XML ({type(exc).__name__})")
+
+    try:
+        manifest = json.loads((ROOT / "site.webmanifest").read_text(encoding="utf-8"))
+        if manifest.get("start_url") != "./" or not manifest.get("icons"):
+            fail(errors, "site.webmanifest: start_url or icons missing")
+    except Exception as exc:
+        fail(errors, f"site.webmanifest: invalid JSON ({type(exc).__name__})")
+
+    for relative, expected in [
+        ("assets/og-brickbot-faq.png", (1200, 630)),
+        ("assets/apple-touch-icon.png", (180, 180)),
+    ]:
+        path = ROOT / relative
+        if path.exists() and png_size(path) != expected:
+            fail(errors, f"{relative}: expected PNG size {expected}, found {png_size(path)}")
+
+
 def main() -> int:
     errors: list[str] = []
     validator = Path(__file__).resolve()
@@ -163,6 +250,7 @@ def main() -> int:
     for path in DAILY.glob("*.json"):
         validate_daily(path, errors)
     validate_search(errors)
+    validate_seo(errors)
     if errors:
         print("PUBLIC SITE VALIDATION FAILED", file=sys.stderr)
         for error in errors:

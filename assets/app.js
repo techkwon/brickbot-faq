@@ -247,7 +247,7 @@ async function selectDay(date) {
   renderFilters();
   renderDailySummary();
   renderFaqs();
-  document.title = target ? `${target} FAQ 요약본 · 중등 강사진 FAQ` : "중등 강사진 FAQ";
+  document.title = target ? `${target} 중등 강사진 FAQ | BRICKBOT FAQ` : "중등 강사진 FAQ | BRICKBOT FAQ";
 }
 
 async function handleRoute() {
@@ -293,7 +293,7 @@ $("#view-all").addEventListener("click", () => {
   state.showAll = true;
   renderDailySummary();
   renderFaqs();
-  document.title = "전체 FAQ · 중등 강사진 FAQ";
+  document.title = "전체 중등 강사진 FAQ | BRICKBOT FAQ";
 });
 
 $("#view-latest").addEventListener("click", () => {
