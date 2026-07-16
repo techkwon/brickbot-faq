@@ -8,6 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DAILY = ROOT / "data" / "daily"
+SEARCH = ROOT / "data" / "search.json"
 
 ALLOWED_URL_PREFIXES = (
     "http://localhost:4173",
@@ -38,6 +39,8 @@ FORBIDDEN_FRAGMENTS = {
 }
 DAILY_KEYS = {"date", "period_start", "period_end", "generated_at", "summary", "stats", "faqs"}
 FAQ_KEYS = {"id", "question", "answer", "category", "tags", "status", "source_count"}
+SEARCH_KEYS = {"version", "updated_at", "total_faqs", "faqs"}
+SEARCH_FAQ_KEYS = FAQ_KEYS | {"date"}
 STAT_KEYS = {"messages_reviewed", "questions_detected", "changes", "excluded"}
 CATEGORIES = {"공통", "원격", "집합", "교과", "강사배치", "자료", "기타"}
 STATUSES = {"확인됨", "검수 필요", "변경됨"}
@@ -92,6 +95,36 @@ def validate_daily(path: Path, errors: list[str]) -> None:
             fail(errors, f"{label}: content too long")
 
 
+def validate_search(errors: list[str]) -> None:
+    if not SEARCH.exists():
+        fail(errors, "data/search.json: required")
+        return
+    try:
+        data = json.loads(SEARCH.read_text(encoding="utf-8"))
+    except Exception as exc:
+        fail(errors, f"data/search.json: invalid JSON ({type(exc).__name__})")
+        return
+    if set(data) != SEARCH_KEYS:
+        fail(errors, f"data/search.json: invalid keys {sorted(data)}")
+        return
+    faqs = data.get("faqs")
+    if not isinstance(faqs, list) or data.get("total_faqs") != len(faqs):
+        fail(errors, "data/search.json: total_faqs mismatch")
+        return
+    daily_total = 0
+    for path in DAILY.glob("*.json"):
+        daily_total += len(json.loads(path.read_text(encoding="utf-8")).get("faqs", []))
+    if len(faqs) != daily_total:
+        fail(errors, f"data/search.json: expected {daily_total} FAQs, found {len(faqs)}")
+    for index, faq in enumerate(faqs):
+        label = f"data/search.json faq[{index}]"
+        if not isinstance(faq, dict) or set(faq) != SEARCH_FAQ_KEYS:
+            fail(errors, f"{label}: invalid keys")
+            continue
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(faq.get("date", ""))):
+            fail(errors, f"{label}: invalid date")
+
+
 def scan_text(path: Path, errors: list[str]) -> None:
     text = path.read_text(encoding="utf-8", errors="replace")
     rel = path.relative_to(ROOT)
@@ -129,6 +162,7 @@ def main() -> int:
             scan_text(path, errors)
     for path in DAILY.glob("*.json"):
         validate_daily(path, errors)
+    validate_search(errors)
     if errors:
         print("PUBLIC SITE VALIDATION FAILED", file=sys.stderr)
         for error in errors:

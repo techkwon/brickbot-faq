@@ -3,6 +3,7 @@
 const state = {
   site: null,
   index: null,
+  searchData: null,
   selectedDate: null,
   selectedCategory: "전체",
   query: "",
@@ -104,6 +105,7 @@ function renderFilters() {
     button.addEventListener("click", () => {
       state.selectedCategory = category;
       renderFilters();
+      renderDailySummary();
       renderFaqs();
     });
     list.append(button);
@@ -119,9 +121,13 @@ function filterFaqs(faqs) {
   });
 }
 
+function isArchiveMode() {
+  return Boolean(state.query.trim()) || state.selectedCategory !== "전체";
+}
+
 function renderDailySummary() {
   const box = $("#daily-summary");
-  if (!state.dailyData) {
+  if (!state.dailyData || isArchiveMode()) {
     box.hidden = true;
     box.replaceChildren();
     return;
@@ -142,9 +148,16 @@ function renderFaqs() {
   const list = $("#faq-list");
   const empty = $("#empty-state");
   list.replaceChildren();
-  const allFaqs = state.dailyData?.faqs || [];
+  const archiveMode = isArchiveMode();
+  const allFaqs = archiveMode ? state.searchData?.faqs || [] : state.dailyData?.faqs || [];
   const faqs = filterFaqs(allFaqs);
-  $("#result-count").textContent = state.dailyData ? `검색 결과 ${faqs.length}건 · 전체 ${allFaqs.length}건` : "발행 대기 중";
+  $("#daily-eyebrow").textContent = archiveMode ? "FULL ARCHIVE" : "DAILY ARCHIVE";
+  $("#daily-title").textContent = archiveMode ? "전체 FAQ 검색" : "24시간 FAQ";
+  $("#result-count").textContent = state.dailyData
+    ? archiveMode
+      ? `전체 기록 검색 결과 ${faqs.length}건 · 누적 ${allFaqs.length}건`
+      : `검색 결과 ${faqs.length}건 · 최신 24시간 ${allFaqs.length}건`
+    : "발행 대기 중";
 
   if (!state.dailyData || faqs.length === 0) {
     empty.hidden = false;
@@ -167,6 +180,7 @@ function renderFaqs() {
     appendLinkedText(answerText, faq.answer);
     answer.append(answerText);
     const meta = el("div", "faq-meta");
+    if (archiveMode && faq.date) meta.append(el("span", "meta-badge date", faq.date));
     meta.append(el("span", "meta-badge", faq.category));
     meta.append(el("span", `meta-badge${faq.status === "검수 필요" ? " review" : ""}`, faq.status));
     meta.append(el("span", "meta-badge", `관련 대화 ${faq.source_count}건`));
@@ -223,6 +237,7 @@ async function init() {
       loadJson("./data/site.json"),
       loadJson("./data/index.json"),
     ]);
+    state.searchData = await loadJson(state.index.search_path || "./data/search.json");
     $("#subtitle").textContent = state.site.subtitle;
     $("#notice").textContent = state.site.notice;
     $("#schedule").textContent = state.site.schedule;
@@ -239,6 +254,7 @@ async function init() {
 
 $("#search").addEventListener("input", (event) => {
   state.query = event.target.value;
+  renderDailySummary();
   renderFaqs();
 });
 

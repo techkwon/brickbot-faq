@@ -58,17 +58,18 @@
       <label class="search-box" for="search">
         <span aria-hidden="true">⌕</span>
         <span class="sr-only">FAQ 검색</span>
-        <input id="search" type="search" autocomplete="off" placeholder="질문이나 키워드를 검색하세요">
+        <input id="search" type="search" autocomplete="off" placeholder="전체 FAQ 검색">
         <kbd>/</kbd>
       </label>
       <div class="filters" id="filters" aria-label="카테고리 필터"></div>
+      <p class="search-help">검색어 또는 카테고리를 선택하면 모든 날짜의 FAQ를 검색합니다.</p>
       <p class="result-count" id="result-count" aria-live="polite"></p>
     </section>
 
     <section class="section" id="daily-section" aria-labelledby="daily-title">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">DAILY ARCHIVE</p>
+          <p class="eyebrow" id="daily-eyebrow">DAILY ARCHIVE</p>
           <h2 id="daily-title">24시간 FAQ</h2>
         </div>
         <a class="text-link" href="#/">최신 보기</a>

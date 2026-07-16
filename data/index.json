@@ -1,6 +1,8 @@
 {
-  "version": 1,
+  "version": 2,
   "updated_at": "2026-07-15T12:36:36+09:00",
+  "total_faqs": 13,
+  "search_path": "./data/search.json",
   "daily": [
     {
       "date": "2026-07-15",

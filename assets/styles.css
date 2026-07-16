@@ -204,6 +204,7 @@ h1 span {
 .search-box input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 1.05rem; font-weight: 650; }
 kbd { padding: 2px 9px; border: 2px solid var(--ink); background: var(--paper); box-shadow: 2px 2px 0 var(--ink); font-weight: 800; }
 .filters { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+.search-help { margin: 14px 0 0; color: var(--muted); font-size: .9rem; font-weight: 750; }
 .filter-button {
   min-height: 42px;
   padding: 7px 14px;
@@ -263,6 +264,7 @@ h2 { margin: 0; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1; letter-spac
 .faq-link { color: var(--blue); font-weight: 850; text-underline-offset: 3px; overflow-wrap: anywhere; }
 .faq-meta { display: flex; flex-wrap: wrap; gap: 8px; }
 .meta-badge { padding: 3px 9px; border: 2px solid var(--ink); background: var(--mint); font-size: .78rem; font-weight: 800; }
+.meta-badge.date { background: var(--yellow); }
 .meta-badge.review { background: var(--orange); }
 
 .empty-card {
@@ -303,15 +305,19 @@ footer a { display: inline-block; margin-top: 10px; color: var(--yellow); font-w
 .noscript { margin: 20px; padding: 20px; border: var(--line); background: var(--orange); }
 
 @media (max-width: 760px) {
+  body { overflow-x: hidden; }
   .access-input-row { grid-template-columns: 1fr; }
-  .topbar { align-items: flex-start; }
-  .update-chip { max-width: 150px; text-align: center; }
-  .hero { grid-template-columns: 1fr; min-height: 0; }
+  .topbar { align-items: flex-start; flex-wrap: wrap; }
+  .brand, .hero-copy, .toolbar, .search-box { min-width: 0; }
+  .update-chip { flex: 0 1 132px; max-width: 132px; padding: 5px 8px; text-align: center; font-size: .74rem; }
+  .hero { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .hero-description { max-width: 100%; word-break: normal; overflow-wrap: anywhere; }
   h1 { font-size: clamp(3.2rem, 17vw, 5.3rem); }
-  .hero-note { transform: none; }
+  .hero-note { min-width: 0; transform: none; }
   .toolbar { margin-bottom: 56px; padding: 16px; }
   kbd { display: none; }
-  .search-box { grid-template-columns: auto 1fr; }
+  .search-box { grid-template-columns: auto minmax(0, 1fr); padding: 0 12px; }
+  .search-box input { font-size: .96rem; }
   .section { margin-top: 62px; }
   .section-heading { align-items: flex-start; }
   .guide-grid { grid-template-columns: 1fr; }
