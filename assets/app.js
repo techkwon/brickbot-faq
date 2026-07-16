@@ -8,6 +8,7 @@ const state = {
   selectedCategory: "전체",
   query: "",
   dailyData: null,
+  showAll: false,
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -122,7 +123,12 @@ function filterFaqs(faqs) {
 }
 
 function isArchiveMode() {
-  return Boolean(state.query.trim()) || state.selectedCategory !== "전체";
+  return state.showAll;
+}
+
+function renderViewSwitch() {
+  $("#view-latest").setAttribute("aria-pressed", String(!state.showAll));
+  $("#view-all").setAttribute("aria-pressed", String(state.showAll));
 }
 
 function renderDailySummary() {
@@ -151,6 +157,7 @@ function renderFaqs() {
   const archiveMode = isArchiveMode();
   const allFaqs = archiveMode ? state.searchData?.faqs || [] : state.dailyData?.faqs || [];
   const faqs = filterFaqs(allFaqs);
+  renderViewSwitch();
   $("#daily-eyebrow").textContent = archiveMode ? "FULL ARCHIVE" : "DAILY ARCHIVE";
   $("#daily-title").textContent = archiveMode ? "전체 FAQ 검색" : "24시간 FAQ";
   $("#result-count").textContent = state.dailyData
@@ -210,6 +217,7 @@ async function selectDay(date) {
   const target = date || state.index.daily[0]?.date || null;
   state.selectedDate = target;
   state.dailyData = target ? await loadJson(`./data/daily/${target}.json`) : null;
+  state.showAll = false;
   state.query = "";
   state.selectedCategory = "전체";
   $("#search").value = "";
@@ -256,6 +264,21 @@ $("#search").addEventListener("input", (event) => {
   state.query = event.target.value;
   renderDailySummary();
   renderFaqs();
+});
+
+$("#view-all").addEventListener("click", () => {
+  state.showAll = true;
+  renderDailySummary();
+  renderFaqs();
+  document.title = "전체 FAQ · 중등 강사진 FAQ";
+});
+
+$("#view-latest").addEventListener("click", () => {
+  if (routeDate()) {
+    location.hash = "#/";
+    return;
+  }
+  selectDay(null).catch((error) => console.error(error));
 });
 
 document.addEventListener("keydown", (event) => {
